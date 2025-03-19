@@ -40,7 +40,7 @@ function createNewSheetEveryMonth() {
 
   const allSheets = sheet.getSheets();
   newSheet.getRange('A50').setValue('last');
-  newSheet.getRange('AO1').setValue('last');
+  newSheet.getRange('AM1').setValue('last');
   newSheet.getRange('A1000').setValue('rows to be deleted');
   var lastRow = newSheet.getLastRow();
   var lastColumn = newSheet.getLastColumn();
@@ -50,8 +50,8 @@ function createNewSheetEveryMonth() {
   }
 
   var totalColumns = newSheet.getLastColumn();
-  newSheet.getRange('A50').clear();
-  newSheet.getRange('AO1').clear();
+  newSheet.getRange('A50').clear();12
+  newSheet.getRange('AM1').clear();
 
   var currentYear = date.getFullYear();
   var currentMonth = date.getMonth();
@@ -100,8 +100,6 @@ function createNewSheetEveryMonth() {
     var totalAbsetThisYearColumn = 5 + daysInMonth + 1;
     var leavesWithoutPayThisMonth = 6 + daysInMonth + 1;
     var paidLeavesThisYear = 7 + daysInMonth + 1;
-    var overtimeThisMonth = 8 + daysInMonth + 1;
-    var overtimedoneonDates = 9 + daysInMonth + 1;
 
     newSheet.getRange(thirdRow, totalAttendancesColumn).setValue('Total Attendances');
     newSheet.getRange(thirdRow, totalAttendancesColumn).setFontSize(15);
@@ -127,17 +125,9 @@ function createNewSheetEveryMonth() {
     newSheet.getRange(thirdRow, paidLeavesThisYear).setFontSize(15);
     newSheet.setColumnWidth(paidLeavesThisYear, 250);
 
-    newSheet.getRange(thirdRow, overtimeThisMonth).setValue('Overtime (in days)');
-    newSheet.getRange(thirdRow, overtimeThisMonth).setFontSize(15);
-    newSheet.setColumnWidth(overtimeThisMonth, 200);
-
-    newSheet.getRange(thirdRow, overtimedoneonDates).setValue('Overtime done on (dates)');
-    newSheet.getRange(thirdRow, overtimedoneonDates).setFontSize(15);
-    newSheet.setColumnWidth(overtimedoneonDates, 250);
-
-    if (lastColumn > overtimedoneonDates) {
-      var columnsToDelete = lastColumn - overtimedoneonDates;
-      newSheet.deleteColumns(overtimedoneonDates + 1, columnsToDelete);
+    if (lastColumn > paidLeavesThisYear) {
+      var columnsToDelete = lastColumn - paidLeavesThisYear;
+      newSheet.deleteColumns(paidLeavesThisYear + 1, columnsToDelete);
     }
 
     var names = [];
@@ -178,6 +168,9 @@ function createNewSheetEveryMonth() {
       newSheet.getRange(thirdRow, 2 + day).setValue(day);
       newSheet.getRange(thirdRow, 2 + day).setFontSize(10);
       newSheet.setColumnWidth(2 + day, 40);
+
+
+   
       holidayThisMonth.forEach((holiday) => {
         var getHolidayDate = holiday.date.split('-')[2]; 
         var getHolidayDateInNumber = parseInt(getHolidayDate);
@@ -300,6 +293,7 @@ function createNewSheetEveryMonth() {
       currentMonthPaidLeaveLeftThisYearColumn.setValue(paidLeaveForYear);
     }
   }
+
 }
 
 function markAttendance() {
@@ -307,7 +301,7 @@ function markAttendance() {
   var activeSheet = sheets[sheets.length - 1];
 
   var names = daysThisMonth.getRange(1, 1, 1, daysThisMonth.getLastColumn()).getValues()[0];
-  var dailyWorkingHours = daysThisMonth.getRange(3, 1, 1, daysThisMonth.getLastColumn()).getValues()[0];
+  var dailyWorkingHours = daysThisMonth.getRange(3, 1, 1, daysThisMonth.getLastColumn()).getValues()[0];//get the daily working hours of employe from the third row of the daysThis Month Sheet 
 
   var currentDay = dailyWorkingHours[0];
   console.log(currentDay);
@@ -323,93 +317,92 @@ function markAttendance() {
       });
     }
   }
+  console.log(namesAndWorkingHours);
   var dates = activeSheet.getRange(3, 3, 1, activeSheet.getLastColumn() - 8).getValues()[0];
 
+  
+  console.log("getday");
+  console.log(getDay);
 
   if (getDay != 0 && getDay != 6) {
+    var totalPaidLeave = 11; //change this 12 to 16
     console.log("days from MOnday to Friday");
     for (var i = 0; i < dates.length; i++) {
       if (dates[i] == getDateInNumber) {
         var lastColumn = activeSheet.getLastColumn();
-        const holidayName = activeSheet.getRange(4, i + 3).getValue();
+        
         for (var j = 0; j < namesAndWorkingHours.length; j++) {
           var getHolidayValue = activeSheet.getRange(4 + j, i + 3).getValue();
-          if(getHolidayValue == '' && holidayName == "") {
+          if(getHolidayValue == '') {
           var attendanceMark = '';
           if (namesAndWorkingHours[j].workingHours < 5.5 && namesAndWorkingHours[j].workingHours > 2 && namesAndWorkingHours[j].workingHours !== '') {
             attendanceMark = "H"
           } else if (namesAndWorkingHours[j].workingHours > 5.5) {
             attendanceMark = "P"
-            if(namesAndWorkingHours[j].workingHours > 8) {
-              var overtime = namesAndWorkingHours[j].workingHours - 8;
-              overtime = overtime.toFixed(1);
-              var getOvertime = parseFloat(overtime);
-              if(getOvertime > 0.5){
-                var getovertimeInday = parseFloat((getOvertime / 8).toFixed(1));
-                var overtimeonDatesLastValue = activeSheet.getRange(4 + j, lastColumn).getValue();
-                var lastColumnValue = activeSheet.getRange(4 + j, lastColumn - 1).getValue();
-                activeSheet.getRange(4 + j, lastColumn - 1).setValue(lastColumnValue + getovertimeInday);
-                 if(overtimeonDatesLastValue == ''){
-                    activeSheet.getRange(4 + j, lastColumn).setValue(getDateInNumber).setHorizontalAlignment("right");
-                  } else {
-                    overtimeonDatesLastValue = overtimeonDatesLastValue + ',' + getDateInNumber;
-                    activeSheet.getRange(4 + j, lastColumn).setValue(overtimeonDatesLastValue).setHorizontalAlignment("right");
-                  }
-              }
-            }
           } else {
             attendanceMark = 'A';
           }
           activeSheet.getRange(4 + j, i + 3).setValue(attendanceMark);
-          var totalAbsentThisMonthCount = activeSheet.getRange(4 + j, lastColumn - 5).getValue(); 
+          var totalAbsentThisMonthCount = activeSheet.getRange(4 + j, lastColumn - 3).getValue();
+          var paidLeaveLeftThisYear = activeSheet.getRange(4 + j, lastColumn).getValue();
 
-          var totalAbsentThisYear = activeSheet.getRange(4 + j, lastColumn - 4).getValue();
-          var leaveWithoutPay = activeSheet.getRange(4 + j, lastColumn - 3).getValue();
-          var totalPaidLeaveLeft = activeSheet.getRange(4 + j, lastColumn - 2).getValue();
+          var totalPaidLeaveLeft = activeSheet.getRange(4 + j, lastColumn).getValue();
+
+          var totalAbsentThisYear = activeSheet.getRange(4 + j, lastColumn - 2).getValue();
+          var leaveWithoutPay = activeSheet.getRange(4 + j, lastColumn - 1).getValue();
+
+          //old code to mark absent 
+          // if (attendanceMark == "A") {
+          //   activeSheet.getRange(4 + j, i + 3).setBackground("#f68973");
+          //   activeSheet.getRange(4 + j, lastColumn - 3).setValue(totalAbsentThisMonthCount + 1);
+          //   if(totalAbsentThisYear < totalPaidLeave) {
+          //      activeSheet.getRange(4 + j, lastColumn - 2).setValue(totalAbsentThisYear + 1);
+          //      activeSheet.getRange(4 + j, lastColumn).setValue(paidLeaveLeftThisYear - 1);
+          //   }else {
+          //     console.log("leaves  excedded ");
+          //     activeSheet.getRange(4 + j, lastColumn - 1).setValue(leaveWithoutPay + 1);
+          //     activeSheet.getRange(4 + j, i + 3).setValue('LWP');
+          //   }
+          // }
+
+          // new code to mark absent
           if (attendanceMark == "A") {
             activeSheet.getRange(4 + j, i + 3).setBackground("#f68973");
-            activeSheet.getRange(4 + j, lastColumn - 5).setValue(totalAbsentThisMonthCount + 1);
-            if(totalPaidLeaveLeft >= 1) {
-              activeSheet.getRange(4 + j, lastColumn - 4).setValue(totalAbsentThisYear + 1);
-              activeSheet.getRange(4 + j, lastColumn - 2).setValue(totalPaidLeaveLeft - 1);
-            } else if(totalPaidLeaveLeft < 1 && totalPaidLeaveLeft > 0) {
-              activeSheet.getRange(4 + j, lastColumn - 4).setValue(totalAbsentThisYear + 0.5);
-              activeSheet.getRange(4 + j, lastColumn - 3).setValue(leaveWithoutPay + 0.5);
-              activeSheet.getRange(4 + j, lastColumn - 2).setValue(totalPaidLeaveLeft - 0.5);
-            } else {
-              activeSheet.getRange(4 + j, lastColumn - 3).setValue(leaveWithoutPay + 1);
+            activeSheet.getRange(4 + j, lastColumn - 3).setValue(totalAbsentThisMonthCount + 1);
+            if(totalAbsentThisYear < totalPaidLeave) {
+              if(totalPaidLeaveLeft < 1) {
+               activeSheet.getRange(4 + j, lastColumn - 2).setValue(totalAbsentThisYear + 0.5);
+               activeSheet.getRange(4 + j, lastColumn - 1).setValue(leaveWithoutPay + 0.5);
+               activeSheet.getRange(4 + j, lastColumn).setValue(paidLeaveLeftThisYear - 0.5);
+              } else {
+               activeSheet.getRange(4 + j, lastColumn - 2).setValue(totalAbsentThisYear + 1);
+               activeSheet.getRange(4 + j, lastColumn).setValue(paidLeaveLeftThisYear - 1);
+              }
+            }else {
+              console.log("leaves  excedded ");
+              activeSheet.getRange(4 + j, lastColumn - 1).setValue(leaveWithoutPay + 1);
               activeSheet.getRange(4 + j, i + 3).setValue('LWP');
             }
           }
 
-          var lastColumnCount = activeSheet.getRange(4 + j, lastColumn - 7).getValue();
+          var lastColumnCount = activeSheet.getRange(4 + j, lastColumn - 5).getValue();
           if (attendanceMark == "P") {
-            activeSheet.getRange(4 + j, lastColumn - 7).setValue(lastColumnCount + 1);
+            activeSheet.getRange(4 + j, lastColumn - 5).setValue(lastColumnCount + 1);
           } else if (attendanceMark == "H") {
-            activeSheet.getRange(4 + j, lastColumn - 5).setValue(totalAbsentThisMonthCount + 0.5);
-            activeSheet.getRange(4 + j, lastColumn - 7).setValue(lastColumnCount + 0.5);
+            activeSheet.getRange(4 + j, lastColumn - 3).setValue(totalAbsentThisMonthCount + 0.5);
+            activeSheet.getRange(4 + j, lastColumn - 5).setValue(lastColumnCount + 0.5);
             activeSheet.getRange(4 + j, i + 3).setBackground("#F4B599");
-            if(totalPaidLeaveLeft > 0) {
-              activeSheet.getRange(4 + j, lastColumn - 4).setValue(totalAbsentThisYear + 0.5);
-              activeSheet.getRange(4 + j, lastColumn - 2).setValue(totalPaidLeaveLeft - 0.5);
+
+            if(totalAbsentThisYear < totalPaidLeave) {
+              activeSheet.getRange(4 + j, lastColumn - 2).setValue(totalAbsentThisYear + 0.5);
+               activeSheet.getRange(4 + j, lastColumn).setValue(paidLeaveLeftThisYear - 0.5);
             }else {
-             activeSheet.getRange(4 + j, lastColumn - 3).setValue(leaveWithoutPay + 0.5);
+             activeSheet.getRange(4 + j, lastColumn - 1).setValue(leaveWithoutPay + 0.5);
             }
           }
         } else {
-            if(namesAndWorkingHours[j].workingHours > 2){
-               var lastColumnValue = activeSheet.getRange(4 + j, lastColumn - 1).getValue();
-               var overtimeonDatesLastValue = activeSheet.getRange(4 + j, lastColumn).getValue();
-               var getOvertimeInDay = parseFloat((namesAndWorkingHours[j].workingHours / 8).toFixed(1));
-               activeSheet.getRange(4 + j, lastColumn - 1).setValue(lastColumnValue + getOvertimeInDay);
-
-               if(overtimeonDatesLastValue == ''){
-                activeSheet.getRange(4 + j, lastColumn).setValue(getDateInNumber).setHorizontalAlignment("right");
-               } else {
-                overtimeonDatesLastValue = overtimeonDatesLastValue + ',' + getDateInNumber;
-                activeSheet.getRange(4 + j, lastColumn).setValue(overtimeonDatesLastValue).setHorizontalAlignment("right");
-               }
-            }
+          console.log('HOLIDAY')
+          return;
         }
         }
       }
@@ -549,3 +542,5 @@ function getHolidayThisMonth(currentMonthDate) {
     console.log('Error fetching holidays: ' + error.message);
   }
 }
+
+
