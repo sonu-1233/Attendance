@@ -13,19 +13,19 @@ function toTitleCase(str) {
 }
 
 var kynetHolidayList = {
-  "Makar Sankranti"  :     '01',
-  "Republic Day"     :	   '01',
-  "Shivaratri"       :	   '01',
-  "Holi"         	   :	   '01',
-  "Independence Day" :	   '01',
-  "Raksha Bandhan"   :	   '01',
-  "Janmashtami"      :	   '01',
-  "Dussehra"         :	   '01',
-  "Deepavali"        :	   '02',
+  "Makar Sankranti": '01',
+  "Republic Day": '01',
+  "Shivaratri": '01',
+  "Holi": '01',
+  "Independence Day": '01',
+  "Raksha Bandhan": '01',
+  "Janmashtami": '01',
+  "Dussehra": '01',
+  "Deepavali": '02',
 };
 
 var holdiayForMarriedWomen = {
-  "Karva Chauth" : '01',
+  "Karva Chauth": '01',
 };
 
 function createNewSheetEveryMonth() {
@@ -179,12 +179,12 @@ function createNewSheetEveryMonth() {
       newSheet.getRange(thirdRow, 2 + day).setFontSize(10);
       newSheet.setColumnWidth(2 + day, 40);
       holidayThisMonth.forEach((holiday) => {
-        var getHolidayDate = holiday.date.split('-')[2]; 
+        var getHolidayDate = holiday.date.split('-')[2];
         var getHolidayDateInNumber = parseInt(getHolidayDate);
 
-        if(getHolidayDateInNumber == day) {
+        if (getHolidayDateInNumber == day) {
           var startRow = thirdRow + 1;
-          if(holiday.name == "Deepavali") {
+          if (holiday.name == "Deepavali") {
             if (dayOfWeek == 0) {
               newSheet.getRange(startRow, 3 + day, names.length, 1).mergeVertically();
               newSheet.getRange(startRow, 3 + day).setValue(holiday.name.toUpperCase());
@@ -194,23 +194,23 @@ function createNewSheetEveryMonth() {
               newSheet.getRange(startRow, 3 + day).setBackground("#F9E4DD");
               newSheet.getRange(startRow, 3 + day).setHorizontalAlignment("center");
               newSheet.getRange(startRow, 3 + day).setVerticalAlignment("middle");
-          } else if(dayOfWeek === 6) {
-            console.log("SATURDAY");
+            } else if (dayOfWeek === 6) {
+              console.log("SATURDAY");
+            } else {
+              newSheet.getRange(startRow, 2 + day, names.length, 1).merge();
+              newSheet.getRange(startRow, 3 + day, names.length, 1).merge();
+              var rangeToMerge = newSheet.getRange(startRow, 2 + day, names.length, 2);
+              rangeToMerge.merge();
+              newSheet.getRange(startRow, 2 + day).setValue(holiday.name.toUpperCase());
+              newSheet.getRange(startRow, 2 + day).setTextRotation(90);
+              specialCountForDiwaliHolidayCount = 1;
+            }
           } else {
-            newSheet.getRange(startRow, 2 + day, names.length, 1).merge();
-            newSheet.getRange(startRow, 3 + day, names.length, 1).merge();
-            var rangeToMerge = newSheet.getRange(startRow, 2 + day, names.length, 2);
-            rangeToMerge.merge();
-            newSheet.getRange(startRow, 2 + day).setValue(holiday.name.toUpperCase());
-            newSheet.getRange(startRow, 2 + day).setTextRotation(90);
-            specialCountForDiwaliHolidayCount = 1;
-          }
-        } else {
             var startRow = thirdRow + 1;
             newSheet.getRange(startRow, 2 + day, names.length, 1).mergeVertically();
             newSheet.getRange(startRow, 2 + day).setValue(holiday.name.toUpperCase());
             newSheet.getRange(startRow, 2 + day).setTextRotation(90);
-        } 
+          }
           var sundayRange = newSheet.getRange(startRow, 2 + day);
           sundayRange.setFontSize(25);
           sundayRange.setFontColor("#FF0000");
@@ -254,18 +254,18 @@ function createNewSheetEveryMonth() {
 
     var getRangeToCalculateHoliday = newSheet.getRange(4, startColumn, 1, endColumn - startColumn + 1);
     var rangeValues = getRangeToCalculateHoliday.getDisplayValues();
-    var counTotalHoliday  = 0;
+    var counTotalHoliday = 0;
 
-    for(y = 0; y < rangeValues[0].length; y++) {
-      if(rangeValues[0][y] !== '') {
-      counTotalHoliday++;
+    for (y = 0; y < rangeValues[0].length; y++) {
+      if (rangeValues[0][y] !== '') {
+        counTotalHoliday++;
       }
     }
 
     var totalHolidayInMonth = counTotalHoliday + specialCountForDiwaliHolidayCount;
-   
+
     var totalWorkingDays = (daysInMonth - counTotalHoliday) - specialCountForDiwaliHolidayCount;
-    if(totalWorkingDays) {
+    if (totalWorkingDays) {
       calculateTotalWorkingHourMonth(totalWorkingDays, totalHolidayInMonth, countSaturdaySunday, holidayThisMonth, daysInMonth, date);
     }
 
@@ -295,7 +295,7 @@ function createNewSheetEveryMonth() {
     currentMonthPaidLeaveLeftThisYearColumn.setValues(getTotalPaidLeaveLeftThisYearValue);
 
     var paidLeaveForYear = 16;
-    if(currentMonthName == 'April') {
+    if (currentMonthName == 'April') {
       getTotalAbsentThisMonthRange.clear();
       currentMonthPaidLeaveLeftThisYearColumn.setValue(paidLeaveForYear);
     }
@@ -334,83 +334,83 @@ function markAttendance() {
         const holidayName = activeSheet.getRange(4, i + 3).getValue();
         for (var j = 0; j < namesAndWorkingHours.length; j++) {
           var getHolidayValue = activeSheet.getRange(4 + j, i + 3).getValue();
-          if(getHolidayValue == '' && holidayName == "") {
-          var attendanceMark = '';
-          if (namesAndWorkingHours[j].workingHours < 5.5 && namesAndWorkingHours[j].workingHours > 2 && namesAndWorkingHours[j].workingHours !== '') {
-            attendanceMark = "H"
-          } else if (namesAndWorkingHours[j].workingHours > 5.5) {
-            attendanceMark = "P"
-            if(namesAndWorkingHours[j].workingHours > 8) {
-              var overtime = namesAndWorkingHours[j].workingHours - 8;
-              overtime = overtime.toFixed(1);
-              var getOvertime = parseFloat(overtime);
-              if(getOvertime > 0.5){
-                var getovertimeInday = parseFloat((getOvertime / 8).toFixed(1));
-                var overtimeonDatesLastValue = activeSheet.getRange(4 + j, lastColumn).getValue();
-                var lastColumnValue = activeSheet.getRange(4 + j, lastColumn - 1).getValue();
-                activeSheet.getRange(4 + j, lastColumn - 1).setValue(lastColumnValue + getovertimeInday);
-                 if(overtimeonDatesLastValue == ''){
+          if (getHolidayValue == '' && holidayName == "") {
+            var attendanceMark = '';
+            if (namesAndWorkingHours[j].workingHours < 5.5 && namesAndWorkingHours[j].workingHours > 2 && namesAndWorkingHours[j].workingHours !== '') {
+              attendanceMark = "H"
+            } else if (namesAndWorkingHours[j].workingHours > 5.5) {
+              attendanceMark = "P"
+              if (namesAndWorkingHours[j].workingHours > 8) {
+                var overtime = namesAndWorkingHours[j].workingHours - 8;
+                overtime = overtime.toFixed(1);
+                var getOvertime = parseFloat(overtime);
+                if (getOvertime > 0.5) {
+                  var getovertimeInday = parseFloat((getOvertime / 8).toFixed(1));
+                  var overtimeonDatesLastValue = activeSheet.getRange(4 + j, lastColumn).getValue();
+                  var lastColumnValue = activeSheet.getRange(4 + j, lastColumn - 1).getValue();
+                  activeSheet.getRange(4 + j, lastColumn - 1).setValue(lastColumnValue + getovertimeInday);
+                  if (overtimeonDatesLastValue == '') {
                     activeSheet.getRange(4 + j, lastColumn).setValue(getDateInNumber).setHorizontalAlignment("right");
                   } else {
                     overtimeonDatesLastValue = overtimeonDatesLastValue + ',' + getDateInNumber;
                     activeSheet.getRange(4 + j, lastColumn).setValue(overtimeonDatesLastValue).setHorizontalAlignment("right");
                   }
+                }
+              }
+            } else {
+              attendanceMark = 'A';
+            }
+            activeSheet.getRange(4 + j, i + 3).setValue(attendanceMark);
+            var totalAbsentThisMonthCount = activeSheet.getRange(4 + j, lastColumn - 5).getValue();
+
+            var totalAbsentThisYear = activeSheet.getRange(4 + j, lastColumn - 4).getValue();
+            var leaveWithoutPay = activeSheet.getRange(4 + j, lastColumn - 3).getValue();
+            var totalPaidLeaveLeft = activeSheet.getRange(4 + j, lastColumn - 2).getValue();
+            if (attendanceMark == "A") {
+              activeSheet.getRange(4 + j, i + 3).setBackground("#f68973");
+              activeSheet.getRange(4 + j, lastColumn - 5).setValue(totalAbsentThisMonthCount + 1);
+              if (totalPaidLeaveLeft >= 1) {
+                activeSheet.getRange(4 + j, lastColumn - 4).setValue(totalAbsentThisYear + 1);
+                activeSheet.getRange(4 + j, lastColumn - 2).setValue(totalPaidLeaveLeft - 1);
+              } else if (totalPaidLeaveLeft < 1 && totalPaidLeaveLeft > 0) {
+                activeSheet.getRange(4 + j, lastColumn - 4).setValue(totalAbsentThisYear + 0.5);
+                activeSheet.getRange(4 + j, lastColumn - 3).setValue(leaveWithoutPay + 0.5);
+                activeSheet.getRange(4 + j, lastColumn - 2).setValue(totalPaidLeaveLeft - 0.5);
+              } else {
+                activeSheet.getRange(4 + j, lastColumn - 3).setValue(leaveWithoutPay + 1);
+                activeSheet.getRange(4 + j, i + 3).setValue('LWP');
+              }
+            }
+
+            var lastColumnCount = activeSheet.getRange(4 + j, lastColumn - 7).getValue();
+            if (attendanceMark == "P") {
+              activeSheet.getRange(4 + j, lastColumn - 7).setValue(lastColumnCount + 1);
+            } else if (attendanceMark == "H") {
+              activeSheet.getRange(4 + j, lastColumn - 5).setValue(totalAbsentThisMonthCount + 0.5);
+              activeSheet.getRange(4 + j, lastColumn - 7).setValue(lastColumnCount + 0.5);
+              activeSheet.getRange(4 + j, i + 3).setBackground("#F4B599");
+              if (totalPaidLeaveLeft > 0) {
+                activeSheet.getRange(4 + j, lastColumn - 4).setValue(totalAbsentThisYear + 0.5);
+                activeSheet.getRange(4 + j, lastColumn - 2).setValue(totalPaidLeaveLeft - 0.5);
+              } else {
+                activeSheet.getRange(4 + j, lastColumn - 3).setValue(leaveWithoutPay + 0.5);
               }
             }
           } else {
-            attendanceMark = 'A';
-          }
-          activeSheet.getRange(4 + j, i + 3).setValue(attendanceMark);
-          var totalAbsentThisMonthCount = activeSheet.getRange(4 + j, lastColumn - 5).getValue(); 
+            if (namesAndWorkingHours[j].workingHours > 2) {
+              var lastColumnValue = activeSheet.getRange(4 + j, lastColumn - 1).getValue();
+              var overtimeonDatesLastValue = activeSheet.getRange(4 + j, lastColumn).getValue();
+              var getOvertimeInDay = parseFloat((namesAndWorkingHours[j].workingHours / 8).toFixed(1));
+              activeSheet.getRange(4 + j, lastColumn - 1).setValue(lastColumnValue + getOvertimeInDay);
 
-          var totalAbsentThisYear = activeSheet.getRange(4 + j, lastColumn - 4).getValue();
-          var leaveWithoutPay = activeSheet.getRange(4 + j, lastColumn - 3).getValue();
-          var totalPaidLeaveLeft = activeSheet.getRange(4 + j, lastColumn - 2).getValue();
-          if (attendanceMark == "A") {
-            activeSheet.getRange(4 + j, i + 3).setBackground("#f68973");
-            activeSheet.getRange(4 + j, lastColumn - 5).setValue(totalAbsentThisMonthCount + 1);
-            if(totalPaidLeaveLeft >= 1) {
-              activeSheet.getRange(4 + j, lastColumn - 4).setValue(totalAbsentThisYear + 1);
-              activeSheet.getRange(4 + j, lastColumn - 2).setValue(totalPaidLeaveLeft - 1);
-            } else if(totalPaidLeaveLeft < 1 && totalPaidLeaveLeft > 0) {
-              activeSheet.getRange(4 + j, lastColumn - 4).setValue(totalAbsentThisYear + 0.5);
-              activeSheet.getRange(4 + j, lastColumn - 3).setValue(leaveWithoutPay + 0.5);
-              activeSheet.getRange(4 + j, lastColumn - 2).setValue(totalPaidLeaveLeft - 0.5);
-            } else {
-              activeSheet.getRange(4 + j, lastColumn - 3).setValue(leaveWithoutPay + 1);
-              activeSheet.getRange(4 + j, i + 3).setValue('LWP');
-            }
-          }
-
-          var lastColumnCount = activeSheet.getRange(4 + j, lastColumn - 7).getValue();
-          if (attendanceMark == "P") {
-            activeSheet.getRange(4 + j, lastColumn - 7).setValue(lastColumnCount + 1);
-          } else if (attendanceMark == "H") {
-            activeSheet.getRange(4 + j, lastColumn - 5).setValue(totalAbsentThisMonthCount + 0.5);
-            activeSheet.getRange(4 + j, lastColumn - 7).setValue(lastColumnCount + 0.5);
-            activeSheet.getRange(4 + j, i + 3).setBackground("#F4B599");
-            if(totalPaidLeaveLeft > 0) {
-              activeSheet.getRange(4 + j, lastColumn - 4).setValue(totalAbsentThisYear + 0.5);
-              activeSheet.getRange(4 + j, lastColumn - 2).setValue(totalPaidLeaveLeft - 0.5);
-            }else {
-             activeSheet.getRange(4 + j, lastColumn - 3).setValue(leaveWithoutPay + 0.5);
-            }
-          }
-        } else {
-            if(namesAndWorkingHours[j].workingHours > 2){
-               var lastColumnValue = activeSheet.getRange(4 + j, lastColumn - 1).getValue();
-               var overtimeonDatesLastValue = activeSheet.getRange(4 + j, lastColumn).getValue();
-               var getOvertimeInDay = parseFloat((namesAndWorkingHours[j].workingHours / 8).toFixed(1));
-               activeSheet.getRange(4 + j, lastColumn - 1).setValue(lastColumnValue + getOvertimeInDay);
-
-               if(overtimeonDatesLastValue == ''){
+              if (overtimeonDatesLastValue == '') {
                 activeSheet.getRange(4 + j, lastColumn).setValue(getDateInNumber).setHorizontalAlignment("right");
-               } else {
+              } else {
                 overtimeonDatesLastValue = overtimeonDatesLastValue + ',' + getDateInNumber;
                 activeSheet.getRange(4 + j, lastColumn).setValue(overtimeonDatesLastValue).setHorizontalAlignment("right");
-               }
+              }
             }
-        }
+          }
         }
       }
     }
@@ -428,7 +428,7 @@ function calculateTotalWorkingHourMonth(totalWorkingDays, totalHolidayInMonth, c
 
   var getHolidayOfThisMonth = [];
 
-  for(var i = 1; i <= daysInMonth; i++) {
+  for (var i = 1; i <= daysInMonth; i++) {
     var currentDate = new Date(currentYear, currentMonth, i);
     var date = currentDate.getDate();
     holidayThisMonth.forEach((holiday) => {
@@ -436,8 +436,8 @@ function calculateTotalWorkingHourMonth(totalWorkingDays, totalHolidayInMonth, c
       var getHolidayDate = holiday.date.split('-')[2];
       var getHolidayDateInNumber = parseInt(getHolidayDate);
       var holidayDayOfWeek = holdayDate.getDay();
-      if(date == getHolidayDateInNumber) {
-        if(holidayDayOfWeek !== 0 && holidayDayOfWeek !== 6) {
+      if (date == getHolidayDateInNumber) {
+        if (holidayDayOfWeek !== 0 && holidayDayOfWeek !== 6) {
           getHolidayOfThisMonth.push(holiday);
         }
       }
@@ -448,52 +448,52 @@ function calculateTotalWorkingHourMonth(totalWorkingDays, totalHolidayInMonth, c
   var formattedDate = month + "," + currentYear;
 
 
-    var totalColumns = expectedHoursThisMonth.getMaxColumns();
-    var getLastColumn = expectedHoursThisMonth.getRange('1:1').getLastColumn();
+  var totalColumns = expectedHoursThisMonth.getMaxColumns();
+  var getLastColumn = expectedHoursThisMonth.getRange('1:1').getLastColumn();
 
-    var firstRowValues = expectedHoursThisMonth.getRange(1, 1, 1, totalColumns).getValues()[0];
-    var lastFilledColumn = -1;
+  var firstRowValues = expectedHoursThisMonth.getRange(1, 1, 1, totalColumns).getValues()[0];
+  var lastFilledColumn = -1;
 
-      for (var col = totalColumns - 1; col >= 0; col--) {
-        if (firstRowValues[col] !== "") {
-          lastFilledColumn = col + 1;
-          break;
+  for (var col = totalColumns - 1; col >= 0; col--) {
+    if (firstRowValues[col] !== "") {
+      lastFilledColumn = col + 1;
+      break;
+    }
+  }
+
+  if (totalColumns == lastFilledColumn) {
+    expectedHoursThisMonth.insertColumnAfter(totalColumns);
+    totalColumns += 1;
+    getLastColumn += 1;
+  }
+
+  var columnToFill = lastFilledColumn + 1;
+
+  expectedHoursThisMonth.getRange(1, columnToFill).setValue(formattedDate);
+  expectedHoursThisMonth.getRange(2, columnToFill).setValue(countSaturdaySunday);
+
+  var holidayRangeOnExpectedHoursSheet = expectedHoursThisMonth.getRange(3, 1, 9, 1).getValues();
+
+  if (getHolidayOfThisMonth.length > 0) {
+    holidayRangeOnExpectedHoursSheet.forEach((getHoliday, index) => {
+      getHolidayOfThisMonth.forEach((holidayThisMonth) => {
+        if (getHoliday[0] == holidayThisMonth.name) {
+          expectedHoursThisMonth.getRange(2 + index + 1, columnToFill).setValue(1);
         }
-      }
-
-      if(totalColumns == lastFilledColumn) {
-        expectedHoursThisMonth.insertColumnAfter(totalColumns);
-        totalColumns += 1;
-        getLastColumn += 1;
-      }
-
-      var columnToFill = lastFilledColumn + 1;
-
-      expectedHoursThisMonth.getRange(1, columnToFill).setValue(formattedDate);
-      expectedHoursThisMonth.getRange(2, columnToFill).setValue(countSaturdaySunday);
-
-      var holidayRangeOnExpectedHoursSheet = expectedHoursThisMonth.getRange(3, 1, 9, 1).getValues();
-
-     if(getHolidayOfThisMonth.length > 0) {
-      holidayRangeOnExpectedHoursSheet.forEach((getHoliday, index) => {
-        getHolidayOfThisMonth.forEach((holidayThisMonth) => {
-           if(getHoliday[0] == holidayThisMonth.name) {
-            expectedHoursThisMonth.getRange(2 + index + 1, columnToFill).setValue(1);
-           }
-        });
-        });
-     }
-     var totalHours = totalWorkingDays * hoursPerDay;
-     expectedHoursThisMonth.getRange(12, columnToFill).setValue(totalHolidayInMonth);
-     expectedHoursThisMonth.getRange(13, columnToFill).setValue(daysInMonth);
-     expectedHoursThisMonth.getRange(14, columnToFill).setValue(totalWorkingDays);
-     expectedHoursThisMonth.getRange(15, columnToFill).setValue(hoursPerDay);
-     expectedHoursThisMonth.getRange(16, columnToFill).setValue(totalHours);
-     expectedHoursThisMonth.getRange(16, columnToFill).setBackground('#F4CCCC');
+      });
+    });
+  }
+  var totalHours = totalWorkingDays * hoursPerDay;
+  expectedHoursThisMonth.getRange(12, columnToFill).setValue(totalHolidayInMonth);
+  expectedHoursThisMonth.getRange(13, columnToFill).setValue(daysInMonth);
+  expectedHoursThisMonth.getRange(14, columnToFill).setValue(totalWorkingDays);
+  expectedHoursThisMonth.getRange(15, columnToFill).setValue(hoursPerDay);
+  expectedHoursThisMonth.getRange(16, columnToFill).setValue(totalHours);
+  expectedHoursThisMonth.getRange(16, columnToFill).setBackground('#F4CCCC');
 }
 
 function getHolidayThisMonth(currentMonthDate) {
-  const calendarId = 'en-gb.indian#holiday@group.v.calendar.google.com'; 
+  const calendarId = 'en-gb.indian#holiday@group.v.calendar.google.com';
   const startDate = new Date(currentMonthDate);
   startDate.setDate(1);
 
@@ -516,10 +516,10 @@ function getHolidayThisMonth(currentMonthDate) {
 
         let trimmedHolidayName;
 
-        if(holidayName !== 'Janmashtami (Smarta)') {
-         trimmedHolidayName  = holidayName.includes('/') ? holidayName.split('/')[1]?.trim() : holidayName.replace(/\s*\(.*\)/, '').trim();
+        if (holidayName !== 'Janmashtami (Smarta)') {
+          trimmedHolidayName = holidayName.includes('/') ? holidayName.split('/')[1]?.trim() : holidayName.replace(/\s*\(.*\)/, '').trim();
         } else {
-         trimmedHolidayName  = holidayName;
+          trimmedHolidayName = holidayName;
         }
         if (kynetHolidayList[trimmedHolidayName] && holidayName !== 'Makar Sankranti') {
           return {
@@ -527,7 +527,7 @@ function getHolidayThisMonth(currentMonthDate) {
             date: holidayDate,
             numberOfDays: kynetHolidayList[trimmedHolidayName]
           };
-        } else if(holidayName == 'Makar Sankranti') {
+        } else if (holidayName == 'Makar Sankranti') {
           const dateObj = new Date(holidayDate);
           dateObj.setDate(dateObj.getDate());
           const formattedDate = dateObj.toISOString().split('T')[0];
