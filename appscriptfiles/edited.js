@@ -13,19 +13,19 @@ function toTitleCase(str) {
 }
 
 var kynetHolidayList = {
-  "Makar Sankranti": '01',
-  "Republic Day": '01',
-  "Shivaratri": '01',
-  "Holi": '01',
-  "Independence Day": '01',
-  "Raksha Bandhan": '01',
-  "Janmashtami": '01',
-  "Dussehra": '01',
-  "Deepavali": '02',
+  "Makar Sankranti"  :     '01',
+  "Republic Day"     :	   '01',
+  "Shivaratri"       :	   '01',
+  "Holi"         	   :	   '01',
+  "Independence Day" :	   '01',
+  "Raksha Bandhan"   :	   '01',
+  "Janmashtami"      :	   '01',
+  "Dussehra"         :	   '01',
+  "Deepavali"        :	   '02',
 };
 
 var holdiayForMarriedWomen = {
-  "Karva Chauth": '01',
+  "Karva Chauth" : '01',
 };
 
 function createNewSheetEveryMonth() {
